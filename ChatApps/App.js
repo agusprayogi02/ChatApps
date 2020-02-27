@@ -5,11 +5,8 @@ import Utama from './src/Views/Utama';
 import Chat from './src/Views/Chat';
 import Auth from './src/Views/Auth';
 import Loading from './src/Views/Loading';
-import * as firebase from "firebase";
-import { firebaseConfig } from './src/Configs/Firebase';
+import { initApi } from './src/Configs/Firebase';
 import SignUp from './src/Views/SignUp';
-
-firebase.initializeApp(firebaseConfig);
 
 const Home = createStackNavigator({
     Utama: { screen: Utama },
@@ -35,6 +32,10 @@ const screen = createSwitchNavigator({
 const Navigation = createAppContainer(screen);
 
 class App extends Component {
+    constructor(props) {
+        super(props)
+        initApi()
+    }
     render() {
         return (
             <Navigation />

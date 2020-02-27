@@ -6,7 +6,7 @@ import {
 import styles from '../Styles/StylesGlobal';
 import { Icon, Button, Card, Form, Item, Input } from "native-base";
 import { TouchableOpacity } from "react-native";
-import firebase from 'firebase'
+import { Auth, Database, initApi } from "../Configs/Firebase";
 
 class SignUp extends Component {
     constructor(props) {
@@ -36,21 +36,31 @@ class SignUp extends Component {
 
     createAcc = async () => {
         const { user, name, pass } = this.state
-        firebase.auth().createUserWithEmailAndPassword(user, pass)
+        Auth().createUserWithEmailAndPassword(user, pass)
+            .then((e) => {
+                var userN = e.user
+                if (userN != null) {
+                    userN.updateProfile({
+                        displayName: name,
+                    }).then((e) => {
+                        console.log(e);
+                    }).catch((error) => {
+                        console.log("eror: ", error);
+                    });
+                    Database().ref('User/' + userN.uid).set({
+                        userId: userN.uid,
+                        name: name,
+                        emai: userN.email,
+                    })
+                        .then(() => {
+                            this.props.navigation.navigate("Loading")
+                        })
+                }
+            })
             .catch(a =>
                 this.setState({ error: a.message })
             )
-        var userN = firebase.auth().currentUser;
-        if (userN != null) {
-            userN.updateProfile({
-                displayName: name,
-            }).then(function () {
-                // Update successful.
-            }).catch(function (error) {
-                console.log(error);
 
-            });
-        }
     }
 
     render() {

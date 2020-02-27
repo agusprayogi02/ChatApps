@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import styles from '../Styles/StylesGlobal';
-import firebase from "firebase";
+import { Auth, publicKey } from "../Configs/Firebase";
 
 class Loading extends Component {
   constructor(props) {
@@ -12,9 +12,11 @@ class Loading extends Component {
   }
 
   AuthLog = () => {
-    firebase.auth().onAuthStateChanged(function (user) {
+    Auth().onAuthStateChanged(function (user) {
       if (user) {
         this.props.navigation.navigate('Home');
+        var uid = Auth().currentUser.uid
+        publicKey(uid)
       } else {
         this.props.navigation.navigate('Auth')
       }
