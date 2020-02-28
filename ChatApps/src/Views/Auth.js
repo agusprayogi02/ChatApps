@@ -8,7 +8,7 @@ import { Icon, Button, Card, Form, Item, Input } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { Auth } from '../Configs/Firebase'
 
-class Auth extends Component {
+class SignIn extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -74,4 +74,4 @@ class Auth extends Component {
         );
     }
 }
-export default Auth;
+export default SignIn;

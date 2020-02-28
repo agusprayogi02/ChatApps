@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, ActivityIndicator, Text } from 'react-native';
 import styles from '../Styles/StylesGlobal';
-import { Auth, publicKey } from "../Configs/Firebase";
+import { Auth } from "../Configs/Firebase";
+import { InitMessage, getUid } from "../Configs/Firebase";
 
 class Loading extends Component {
   constructor(props) {
@@ -15,8 +16,7 @@ class Loading extends Component {
     Auth().onAuthStateChanged(function (user) {
       if (user) {
         this.props.navigation.navigate('Home');
-        var uid = Auth().currentUser.uid
-        publicKey(uid)
+        InitMessage()
       } else {
         this.props.navigation.navigate('Auth')
       }

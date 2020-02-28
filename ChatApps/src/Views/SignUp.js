@@ -50,7 +50,7 @@ class SignUp extends Component {
                     Database().ref('User/' + userN.uid).set({
                         userId: userN.uid,
                         name: name,
-                        emai: userN.email,
+                        email: userN.email,
                     })
                         .then(() => {
                             this.props.navigation.navigate("Loading")
