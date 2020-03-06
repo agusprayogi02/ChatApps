@@ -4,11 +4,14 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
-    Dimensions
+    Dimensions,
+    Platform
 } from "react-native";
 import styles from '../Styles/StylesGlobal';
 import { Icon, Input } from "native-base";
-const { width, height } = Dimensions.get('window')
+import { GiftedChat } from 'react-native-gifted-chat'
+import { getName, Database, getUid } from '../Configs/Firebase'
+// const { width, height } = Dimensions.get('window')
 
 class Chat extends Component {
     static navigationOptions = (navigation) => {
@@ -24,10 +27,37 @@ class Chat extends Component {
             </TouchableOpacity>
         }
     }
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            message: [],
+            uid: this.props.navigation.state.params.data.uid
+        }
+        Database().ref('Chats/' + this.props.navigation.state.params.data.kode).once("value")
+            .then((e) => {
+                e.forEach((d) => {
+
+                })
+            })
+    }
+
+    onSend(messages = []) {
+        this.setState(previousState => ({
+            message: GiftedChat.append(previousState.message, messages),
+        }))
+        console.log(this.state.message);
+
+    }
+
     render() {
         return (
-            <View style={styles.contCenter}>
-                <Input placeholder="hai" style={{ ...StyleSheet.absoluteFill, marginTop: height - 120, width: width }} />
+            <View style={{ flex: 1 }}>
+                <GiftedChat
+                    messages={this.state.message}
+                    onSend={mes => this.onSend(mes)}
+                    user={{ _id: getUid() }}
+                />
             </View>
         );
     }
