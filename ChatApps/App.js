@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import Utama from './src/Views/Utama';
@@ -6,6 +6,7 @@ import Chat from './src/Views/Chat';
 import SignIn from './src/Views/Auth';
 import Loading from './src/Views/Loading';
 import SignUp from './src/Views/SignUp';
+import NavigationService from "./src/Configs/NavigationService";
 
 const Home = createStackNavigator({
     Utama: { screen: Utama },
@@ -30,13 +31,15 @@ const screen = createSwitchNavigator({
 
 const Navigation = createAppContainer(screen);
 
-class App extends Component {
+export default class App extends React.Component {
     render() {
         return (
-            <Navigation />
+            <Navigation
+                ref={navigatorRef => {
+                    NavigationService.setTopLevelNavigator(navigatorRef)
+                }}
+            />
         )
     }
 }
-
-export default App;
 
