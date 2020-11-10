@@ -53,7 +53,7 @@ class SignUp extends Component {
                         email: userN.email,
                     })
                         .then(() => {
-                            this.props.navigation.navigate("Loading")
+                            this.props.navigation.navigate("Auth")
                         })
                 }
             })

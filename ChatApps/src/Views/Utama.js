@@ -39,31 +39,32 @@ class Utama extends Component {
     }
 
     listData = async () => {
-        const snapshot = await Database().ref('User/').once('value')
-        // const data = snapshot.exportVal();
-        let i = 0, data = []
-        snapshot.forEach((e) => {
-            var dt = e.val().name
-            if (getName() != dt) {
-                data[i] = {
-                    key: i,
-                    name: dt,
-                    uid: e.val().userId
+        Database().ref('User/').on('value', snapshot => {
+            console.log(snapshot.hasChildren());
+            let i = 0, data = [];
+            snapshot.forEach((e) => {
+                var dt = e.val().userId;
+                if (getUid() != dt) {
+                    data[i] = {
+                        key: i,
+                        name: e.val().name,
+                        uid: dt
+                    };
+                    i++;
                 }
-                i++
-            }
+            });
+            // console.log(data);
+            this.setState({ data: data });
         })
-        // console.log(data);
-        this.setState({ data: data })
     }
 
     onSelect(data) {
         const uid = data.uid
         let r = Math.random().toString(32).substring(2) + Math.random().toString(32).substring(2);
-        Database().ref('User/Chat/' + getUid() + '/' + uid).once("value")
+        Database().ref('Kode/Chat/' + getUid() + '/' + uid).once("value")
             .then((snap) => {
                 if (snap.val() == null) {
-                    Database().ref('User/Chat/' + getUid() + '/' + uid).push({
+                    Database().ref('Kode/Chat/' + getUid() + '/' + uid).push({
                         kode: r
                     })
                 }
@@ -71,18 +72,23 @@ class Utama extends Component {
                 snap.forEach((e) => {
                     kode1 = e.val().kode
                 })
-                Database().ref("User/Chat/" + uid + '/' + getUid()).once("value")
+                Database().ref("Kode/Chat/" + uid + '/' + getUid()).once("value")
                     .then((e) => {
                         if (e.val() == null) {
-                            Database().ref("User/Chat/" + uid + '/' + getUid()).push({
+                            Database().ref("Kode/Chat/" + uid + '/' + getUid()).push({
                                 kode: r
                             })
                         }
                         let kode2 = null
                         e.forEach((ef) => {
                             kode2 = ef.val().kode
+                            // console.log(kode2);
+                            // console.log(kode1);
                         })
                         if (kode1 == kode2) {
+                            if (kode1 == null) {
+                                kode1 = r
+                            }
                             NavigationService.navigate('Chat', { data: data, kode: kode1 })
                         }
                     })
